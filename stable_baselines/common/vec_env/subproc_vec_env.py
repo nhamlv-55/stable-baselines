@@ -10,7 +10,11 @@ from stable_baselines.common.tile_images import tile_images
 
 def _worker(remote, parent_remote, env_fn_wrapper):
     parent_remote.close()
-    env = env_fn_wrapper.var()
+    try:
+        env = env_fn_wrapper.var()
+    except Exception as e:
+        print("using occam_gym, not a gym from openai")
+        env = env_fn_wrapper.var
     while True:
         try:
             cmd, data = remote.recv()
